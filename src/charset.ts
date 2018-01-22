@@ -44,7 +44,10 @@ export class Charset extends Base {
       do {
         is_done = true;
 
-        const subtract_data_unit = subtract_data[subtract_index];
+        const subtract_data_unit = subtract_data[subtract_index] as
+          | undefined
+          | CharsetDataUnit;
+
         if (subtract_data_unit === undefined) {
           new_data.push(data_unit);
           break;

@@ -1,5 +1,4 @@
 import { Base } from './base';
-import { Or, OrInput } from './or';
 
 export const wrap = (input: string | Base) =>
   typeof input !== 'string' || input.length === 1
