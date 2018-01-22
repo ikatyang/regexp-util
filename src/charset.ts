@@ -10,8 +10,6 @@ export type CharsetRawInput =
 
 export type CharsetDataUnit = [number, number];
 
-export const charset = (...inputs: CharsetInput[]) => new Charset(...inputs);
-
 export class Charset extends Base {
   public data: CharsetDataUnit[];
 
@@ -52,7 +50,7 @@ export class Charset extends Base {
 
     let last_data_unit: CharsetDataUnit | null = null;
     for (const data_unit of this.data) {
-      if (!last_data_unit || last_data_unit[1] + 1 < data_unit[0]) {
+      if (last_data_unit === null || last_data_unit[1] + 1 < data_unit[0]) {
         new_data.push(data_unit);
         last_data_unit = data_unit;
       } else {
@@ -64,6 +62,8 @@ export class Charset extends Base {
     this.data = new_data;
   }
 }
+
+export const charset = (...inputs: CharsetInput[]) => new Charset(...inputs);
 
 function unicode(char: number) {
   return `\\u{${char.toString(16)}}`;

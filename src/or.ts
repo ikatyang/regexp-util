@@ -3,8 +3,6 @@ import { Charset, CharsetInput } from './charset';
 
 export type OrInput = string | CharsetInput;
 
-export const or = (...inputs: OrInput[]) => new Or(...inputs);
-
 export class Or extends Base {
   public charset: Charset;
   public strings: Set<string>;
@@ -48,3 +46,5 @@ export class Or extends Base {
     return `(?:${parts.join('|')})`;
   }
 }
+
+export const or = (...inputs: OrInput[]) => new Or(...inputs);
