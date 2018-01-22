@@ -1,5 +1,6 @@
 import { Base } from './base';
 import { Charset, CharsetInput } from './charset';
+import { wrap } from './util';
 
 export type OrInput = string | CharsetInput;
 
@@ -43,7 +44,7 @@ export class Or extends Base {
       parts.push(...this.strings);
     }
 
-    return `(?:${parts.join('|')})`;
+    return wrap(parts.join('|'));
   }
 }
 

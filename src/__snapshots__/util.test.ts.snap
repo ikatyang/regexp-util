@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`concat 1`] = `"helloworld"`;
+
+exports[`optional 1`] = `"(?:abc)?"`;
+
+exports[`repeat: count = 0, max = Infinity 1`] = `"(?:abc)*"`;
+
+exports[`repeat: count = 1, max = Infinity 1`] = `"(?:abc)+"`;
+
+exports[`repeat: count > 1, max = Infinity 1`] = `"(?:abc){2,}"`;
+
+exports[`repeat: count 1`] = `"(?:abc){1}"`;
+
+exports[`repeat: count, max != Infinity 1`] = `"(?:abc){1,2}"`;
+
+exports[`wrap: accept char 1`] = `"a"`;
+
+exports[`wrap: accept string 1`] = `"(?:abc)"`;
