@@ -31,6 +31,7 @@ export class Charset extends Base {
 
   // tslint:disable-next-line:naming-convention
   public toString() {
+    // TODO: throw error if empty
     const ranges = this.data.map(
       ([start, end]) =>
         start === end ? unicode(start) : `${unicode(start)}-${unicode(end)}`,
