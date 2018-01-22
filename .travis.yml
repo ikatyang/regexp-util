@@ -4,6 +4,7 @@ node_js:
 - 6
 - stable
 
+# TODO(public)
 # before_install:
 # - yarn global add codecov
 
@@ -11,6 +12,7 @@ script:
 - yarn run lint
 - yarn run test
 
+# TODO(public)
 # after_script:
 # - codecov
 

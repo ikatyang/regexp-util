@@ -1,6 +1,7 @@
 # regexp-util
 
 <!--
+TODO(public)
 [![npm](https://img.shields.io/npm/v/regexp-util.svg)](https://www.npmjs.com/package/regexp-util)
 [![build](https://img.shields.io/travis/ikatyang/regexp-util/master.svg)](https://travis-ci.org/ikatyang/regexp-util/builds)
 [![coverage](https://img.shields.io/codecov/c/github/ikatyang/regexp-util/master.svg)](https://codecov.io/gh/ikatyang/regexp-util)
