@@ -12,6 +12,10 @@ test('create: accept or', () => {
   expect(or('a', [1, 3], or('c', 'd')).toString()).toMatchSnapshot();
 });
 
+test('create: special chars are considered string', () => {
+  expect(or('a', '^', '$').toString()).toMatchSnapshot();
+});
+
 test('union', () => {
   expect(
     or('hello', 'world', [5, 9])
@@ -20,10 +24,18 @@ test('union', () => {
   ).toMatchSnapshot();
 });
 
-test('subtract', () => {
+test('subtract: default', () => {
   expect(
     or('hello', 'world', [1, 7], 'foo', 'bar')
       .subtract('world', [3, 5], or('bar', 'baz'))
+      .toString(),
+  ).toMatchSnapshot();
+});
+
+test('subtract: special chars are considered string', () => {
+  expect(
+    or('a', '^', '$')
+      .subtract('^')
       .toString(),
   ).toMatchSnapshot();
 });

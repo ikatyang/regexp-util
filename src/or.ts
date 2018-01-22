@@ -18,7 +18,10 @@ export class Or extends Base {
       if (input instanceof Or) {
         strings.push(...input.strings);
         charset_inputs.push(input.charset);
-      } else if (typeof input !== 'string' || input.length === 1) {
+      } else if (
+        typeof input !== 'string' ||
+        (input.length === 1 && !is_special_char(input))
+      ) {
         charset_inputs.push(input);
       } else {
         strings.push(input);
@@ -44,7 +47,10 @@ export class Or extends Base {
           strings.delete(str);
         }
         charset_inputs.push(input.charset);
-      } else if (typeof input !== 'string' || input.length === 1) {
+      } else if (
+        typeof input !== 'string' ||
+        (input.length === 1 && !is_special_char(input))
+      ) {
         charset_inputs.push(input);
       } else {
         strings.delete(input);
@@ -74,3 +80,13 @@ export class Or extends Base {
 }
 
 export const or = (...inputs: OrInput[]) => new Or(...inputs);
+
+function is_special_char(char: string) {
+  switch (char) {
+    case '^':
+    case '$':
+      return true;
+    default:
+      return false;
+  }
+}

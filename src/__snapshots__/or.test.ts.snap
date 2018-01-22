@@ -6,6 +6,10 @@ exports[`create: accept or 1`] = `"(?:[\\\\u{1}-\\\\u{3}\\\\u{61}\\\\u{63}-\\\\u
 
 exports[`create: accept string 1`] = `"(?:hello|world)"`;
 
-exports[`subtract 1`] = `"(?:[\\\\u{1}-\\\\u{2}\\\\u{6}-\\\\u{7}]|hello|foo)"`;
+exports[`create: special chars are considered string 1`] = `"(?:[\\\\u{61}]|^|$)"`;
+
+exports[`subtract: default 1`] = `"(?:[\\\\u{1}-\\\\u{2}\\\\u{6}-\\\\u{7}]|hello|foo)"`;
+
+exports[`subtract: special chars are considered string 1`] = `"(?:[\\\\u{61}]|$)"`;
 
 exports[`union 1`] = `"(?:[\\\\u{3}-\\\\u{9}]|hello|world)"`;
