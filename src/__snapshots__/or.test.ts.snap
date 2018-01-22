@@ -2,8 +2,10 @@
 
 exports[`create: accept charset inputs 1`] = `"(?:[\\\\u{1}-\\\\u{3}\\\\u{61}])"`;
 
+exports[`create: accept or 1`] = `"(?:[\\\\u{1}-\\\\u{3}\\\\u{61}\\\\u{63}-\\\\u{64}])"`;
+
 exports[`create: accept string 1`] = `"(?:hello|world)"`;
 
-exports[`subtract 1`] = `"(?:[\\\\u{1}-\\\\u{2}\\\\u{6}-\\\\u{7}]|hello)"`;
+exports[`subtract 1`] = `"(?:[\\\\u{1}-\\\\u{2}\\\\u{6}-\\\\u{7}]|hello|foo)"`;
 
 exports[`union 1`] = `"(?:[\\\\u{3}-\\\\u{9}]|hello|world)"`;

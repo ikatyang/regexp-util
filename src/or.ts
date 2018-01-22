@@ -2,7 +2,7 @@ import { Base } from './base';
 import { Charset, CharsetInput } from './charset';
 import { wrap } from './util';
 
-export type OrInput = string | CharsetInput;
+export type OrInput = string | Or | CharsetInput;
 
 export class Or extends Base {
   public charset: Charset;
@@ -11,17 +11,21 @@ export class Or extends Base {
   constructor(...inputs: OrInput[]) {
     super();
 
-    this.strings = new Set();
+    const strings: string[] = [];
     const charset_inputs: CharsetInput[] = [];
 
     for (const input of inputs) {
-      if (typeof input !== 'string' || input.length === 1) {
+      if (input instanceof Or) {
+        strings.push(...input.strings);
+        charset_inputs.push(input.charset);
+      } else if (typeof input !== 'string' || input.length === 1) {
         charset_inputs.push(input);
       } else {
-        this.strings.add(input);
+        strings.push(input);
       }
     }
 
+    this.strings = new Set(strings);
     this.charset = new Charset(...charset_inputs);
   }
 
@@ -35,7 +39,12 @@ export class Or extends Base {
 
     const charset_inputs: CharsetInput[] = [];
     for (const input of inputs) {
-      if (typeof input !== 'string' || input.length === 1) {
+      if (input instanceof Or) {
+        for (const str of input.strings) {
+          strings.delete(str);
+        }
+        charset_inputs.push(input.charset);
+      } else if (typeof input !== 'string' || input.length === 1) {
         charset_inputs.push(input);
       } else {
         strings.delete(input);
