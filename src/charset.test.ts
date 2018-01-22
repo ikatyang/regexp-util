@@ -43,3 +43,55 @@ test('union', () => {
       .toString(),
   ).toEqual('[\\u{1}\\u{3}]');
 });
+
+test('subtract: front + no overlap', () => {
+  expect(
+    charset([5, 7])
+      .subtract([1, 3])
+      .toString(),
+  ).toEqual(`[\\u{5}-\\u{7}]`);
+});
+
+test('subtract: back + no overlap', () => {
+  expect(
+    charset([1, 3])
+      .subtract([5, 7])
+      .toString(),
+  ).toEqual(`[\\u{1}-\\u{3}]`);
+});
+
+test('subtract: front overlap', () => {
+  expect(
+    charset([3, 7])
+      .subtract([1, 5])
+      .toString(),
+  ).toEqual(`[\\u{6}-\\u{7}]`);
+});
+
+test('subtract: central overlap', () => {
+  expect(
+    charset([1, 7])
+      .subtract([3, 5])
+      .toString(),
+  ).toEqual(`[\\u{1}-\\u{2}\\u{6}-\\u{7}]`);
+});
+
+test('subtract: back overlap', () => {
+  expect(
+    charset([1, 5])
+      .subtract([3, 7])
+      .toString(),
+  ).toEqual(`[\\u{1}-\\u{2}]`);
+});
+
+test('subtract: entire overlap', () => {
+  expect(charset([3, 5]).subtract([1, 7]).data.length).toEqual(0);
+});
+
+test('subtract: mixed', () => {
+  expect(
+    charset([1, 2], [5, 6], [8, 9])
+      .subtract([2, 8])
+      .toString(),
+  ).toEqual(`[\\u{1}\\u{9}]`);
+});

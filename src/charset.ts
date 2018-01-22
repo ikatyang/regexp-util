@@ -31,6 +31,52 @@ export class Charset extends Base {
     return new Charset(this, ...inputs);
   }
 
+  public subtract(...inputs: CharsetInput[]) {
+    const new_data: CharsetDataUnit[] = [];
+
+    let subtract_index = 0;
+    const { data: subtract_data } = new Charset(...inputs);
+
+    for (const data_unit of this.data) {
+      const [start, end] = data_unit;
+
+      let is_done: boolean;
+      do {
+        is_done = true;
+
+        const subtract_data_unit = subtract_data[subtract_index];
+        if (subtract_data_unit === undefined) {
+          new_data.push(data_unit);
+          break;
+        }
+
+        const [subtract_start, subtract_end] = subtract_data_unit;
+
+        if (subtract_end < start) {
+          // front + no overlap
+          is_done = false;
+          subtract_index++;
+        } else if (end < subtract_start) {
+          // back + no overlap
+          new_data.push(data_unit);
+        } else if (subtract_start < start && subtract_end < end) {
+          // front overlap
+          subtract_index++;
+          new_data.push([subtract_end + 1, end]);
+        } else if (start < subtract_start && subtract_end < end) {
+          // central overlap
+          subtract_index++;
+          new_data.push([start, subtract_start - 1], [subtract_end + 1, end]);
+        } else if (start < subtract_start && end < subtract_end) {
+          // back overlap
+          new_data.push([start, subtract_start - 1]);
+        } // else: entire overlap
+      } while (!is_done);
+    }
+
+    return new Charset(...new_data);
+  }
+
   protected _is_empty() {
     return this.data.length === 0;
   }
