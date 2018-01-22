@@ -3,3 +3,5 @@
 exports[`toRegExp: accept flags 1`] = `/123/u`;
 
 exports[`toRegExp: default 1`] = `/123/`;
+
+exports[`toString: throw error if empty 1`] = `"Output is empty."`;

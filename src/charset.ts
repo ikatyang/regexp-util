@@ -29,18 +29,20 @@ export class Charset extends Base {
     this._unique();
   }
 
-  // tslint:disable-next-line:naming-convention
-  public toString() {
-    // TODO: throw error if empty
+  public union(...inputs: CharsetInput[]) {
+    return new Charset(this, ...inputs);
+  }
+
+  protected _is_empty() {
+    return this.data.length === 0;
+  }
+
+  protected _to_string() {
     const ranges = this.data.map(
       ([start, end]) =>
         start === end ? unicode(start) : `${unicode(start)}-${unicode(end)}`,
     );
     return `[${ranges.join('')}]`;
-  }
-
-  public union(...inputs: CharsetInput[]) {
-    return new Charset(this, ...inputs);
   }
 
   private _unique() {
@@ -70,7 +72,7 @@ function unicode(char: number) {
 function char_code(char: string) {
   if (char.length !== 1) {
     const display = `${char.length} (${JSON.stringify(char)})`;
-    throw new Error(`Expected length = 1, but received ${display})`);
+    throw new Error(`Expected length = 1, but received ${display}.`);
   }
   return char.charCodeAt(0);
 }

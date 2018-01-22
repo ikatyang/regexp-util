@@ -26,9 +26,15 @@ export class Or extends Base {
     this.charset = new Charset(...charset_inputs);
   }
 
-  // tslint:disable-next-line:naming-convention
-  public toString() {
-    // TODO: throw error if empty
+  public union(...inputs: OrInput[]) {
+    return new Or(this.charset, ...this.strings, ...inputs);
+  }
+
+  protected _is_empty() {
+    return this.charset.isEmpty() && this.strings.size === 0;
+  }
+
+  protected _to_string() {
     const parts: string[] = [];
 
     if (this.charset.data.length !== 0) {
@@ -40,9 +46,5 @@ export class Or extends Base {
     }
 
     return `(?:${parts.join('|')})`;
-  }
-
-  public union(...inputs: OrInput[]) {
-    return new Or(this.charset, ...this.strings, ...inputs);
   }
 }

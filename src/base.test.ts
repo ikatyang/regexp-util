@@ -1,17 +1,25 @@
 import { Base } from './base';
 
 class Test extends Base {
-  public data = '123';
-  // tslint:disable-next-line:naming-convention
-  public toString() {
+  constructor(public data: string) {
+    super();
+  }
+  protected _is_empty() {
+    return this.data.length === 0;
+  }
+  protected _to_string() {
     return this.data;
   }
 }
 
 test('toRegExp: default', () => {
-  expect(new Test().toRegExp()).toMatchSnapshot();
+  expect(new Test('123').toRegExp()).toMatchSnapshot();
 });
 
 test('toRegExp: accept flags', () => {
-  expect(new Test().toRegExp('u')).toMatchSnapshot();
+  expect(new Test('123').toRegExp('u')).toMatchSnapshot();
+});
+
+test('toString: throw error if empty', () => {
+  expect(() => new Test('').toString()).toThrowErrorMatchingSnapshot();
 });
