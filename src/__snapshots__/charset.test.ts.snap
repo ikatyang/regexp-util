@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create: reject string (length !== 1) 1`] = `"Expected length = 1, but received 3 (\\"123\\"))"`;
