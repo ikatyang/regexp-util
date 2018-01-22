@@ -29,6 +29,22 @@ export class Or extends Base {
     return new Or(this.charset, ...this.strings, ...inputs);
   }
 
+  public subtract(...inputs: OrInput[]) {
+    const strings = new Set(this.strings);
+    const charset = new Charset(...this.charset.data);
+
+    const charset_inputs: CharsetInput[] = [];
+    for (const input of inputs) {
+      if (typeof input !== 'string' || input.length === 1) {
+        charset_inputs.push(input);
+      } else {
+        strings.delete(input);
+      }
+    }
+
+    return new Or(charset.subtract(...charset_inputs), ...strings);
+  }
+
   protected _is_empty() {
     return this.charset.isEmpty() && this.strings.size === 0;
   }

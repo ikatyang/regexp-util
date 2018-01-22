@@ -15,3 +15,11 @@ test('union', () => {
       .toString(),
   ).toMatchSnapshot();
 });
+
+test('subtract', () => {
+  expect(
+    or('hello', 'world', [1, 7])
+      .subtract('world', [3, 5])
+      .toString(),
+  ).toMatchSnapshot();
+});
