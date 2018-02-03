@@ -62,7 +62,7 @@ export class Charset extends Base {
         } else if (end < subtract_start) {
           // back + no overlap
           new_data.push(data_unit);
-        } else if (subtract_start < start && subtract_end < end) {
+        } else if (subtract_start <= start && subtract_end < end) {
           // front overlap
           subtract_index++;
           new_data.push([subtract_end + 1, end]);
@@ -70,7 +70,7 @@ export class Charset extends Base {
           // central overlap
           subtract_index++;
           new_data.push([start, subtract_start - 1], [subtract_end + 1, end]);
-        } else if (start < subtract_start && end < subtract_end) {
+        } else if (start < subtract_start && end <= subtract_end) {
           // back overlap
           new_data.push([start, subtract_start - 1]);
         } // else: entire overlap

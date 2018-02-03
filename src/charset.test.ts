@@ -68,6 +68,14 @@ test('subtract: front overlap', () => {
   ).toEqual(`[\\u{6}-\\u{7}]`);
 });
 
+test('subtract: exact front overlap', () => {
+  expect(
+    charset([3, 7])
+      .subtract([3, 5])
+      .toString(),
+  ).toEqual(`[\\u{6}-\\u{7}]`);
+});
+
 test('subtract: central overlap', () => {
   expect(
     charset([1, 7])
@@ -80,6 +88,14 @@ test('subtract: back overlap', () => {
   expect(
     charset([1, 5])
       .subtract([3, 7])
+      .toString(),
+  ).toEqual(`[\\u{1}-\\u{2}]`);
+});
+
+test('subtract: exact back overlap', () => {
+  expect(
+    charset([1, 5])
+      .subtract([3, 5])
       .toString(),
   ).toEqual(`[\\u{1}-\\u{2}]`);
 });
