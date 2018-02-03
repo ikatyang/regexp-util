@@ -80,6 +80,10 @@ export class Charset extends Base {
     return new Charset(...new_data);
   }
 
+  public intersect(...inputs: CharsetInput[]) {
+    return this.subtract(this.subtract(...inputs));
+  }
+
   protected _is_empty() {
     return this.data.length === 0;
   }

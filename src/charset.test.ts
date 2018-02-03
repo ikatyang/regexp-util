@@ -111,3 +111,11 @@ test('subtract: mixed', () => {
       .toString(),
   ).toEqual(`[\\u{1}\\u{9}]`);
 });
+
+test('intersect', () => {
+  expect(
+    charset([1, 5])
+      .intersect([3, 7])
+      .toString(),
+  ).toEqual(`[\\u{3}-\\u{5}]`);
+});
