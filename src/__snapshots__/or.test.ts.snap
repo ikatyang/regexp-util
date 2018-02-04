@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`create: accept charset inputs 1`] = `"(?:[\\\\u{1}-\\\\u{3}\\\\u{61}])"`;
+exports[`create: accept charset inputs 1`] = `"(?:[\\\\u0001-\\\\u0003\\\\u0061])"`;
 
-exports[`create: accept or 1`] = `"(?:[\\\\u{1}-\\\\u{3}\\\\u{61}\\\\u{63}-\\\\u{64}])"`;
+exports[`create: accept or 1`] = `"(?:[\\\\u0001-\\\\u0003\\\\u0061\\\\u0063-\\\\u0064])"`;
 
 exports[`create: accept string 1`] = `"(?:hello|world)"`;
 
-exports[`create: special chars are considered string 1`] = `"(?:[\\\\u{61}]|^|$)"`;
+exports[`create: special chars are considered string 1`] = `"(?:[\\\\u0061]|^|$)"`;
 
-exports[`subtract: default 1`] = `"(?:[\\\\u{1}-\\\\u{2}\\\\u{6}-\\\\u{7}]|hello|foo)"`;
+exports[`subtract: default 1`] = `"(?:[\\\\u0001-\\\\u0002\\\\u0006-\\\\u0007]|hello|foo)"`;
 
-exports[`subtract: special chars are considered string 1`] = `"(?:[\\\\u{61}]|$)"`;
+exports[`subtract: special chars are considered string 1`] = `"(?:[\\\\u0061]|$)"`;
 
-exports[`union 1`] = `"(?:[\\\\u{3}-\\\\u{9}]|hello|world)"`;
+exports[`union 1`] = `"(?:[\\\\u0003-\\\\u0009]|hello|world)"`;

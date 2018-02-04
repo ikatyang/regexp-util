@@ -119,7 +119,10 @@ export class Charset extends Base {
 export const charset = (...inputs: CharsetInput[]) => new Charset(...inputs);
 
 function unicode(char: number) {
-  return `\\u{${char.toString(16)}}`;
+  const hex = char.toString(16);
+  return char > 0xffff
+    ? `\\u{${hex}}`
+    : `\\u${'0'.repeat(4 - hex.length)}${hex}`;
 }
 
 function char_code(char: string) {
