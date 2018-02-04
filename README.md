@@ -24,8 +24,17 @@ yarn add regexp-util
 ## Usage
 
 ```ts
-// sample code
+const util = require('regexp-util');
+
+const regex = util.charset(['a', 'g']) // a ~ g
+  .subtract(['c', 'e'])
+  .toRegExp();
+
+const aResult = 'a'.test(regex); //=> true
+const dResult = 'd'.test(regex); //=> false
 ```
+
+NOTE: You need to pass [`u` flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode) for codepoint that is greater than `0xffff`.
 
 ## Development
 
