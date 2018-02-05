@@ -34,7 +34,37 @@ const aResult = 'a'.test(regex); //=> true
 const dResult = 'd'.test(regex); //=> false
 ```
 
-NOTE: You need to pass [`u` flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode) for codepoint that is greater than `0xffff` (which caused `Range out of order in character class`).
+NOTE: You need to pass [`u` flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode) for codepoint that is greater than `0xffff`, or you'll have to [downgrade the pattern](https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae) (e.g. `\u{10000}` -> `\uD800\uDC00`) using [`regexpu-core`](https://github.com/mathiasbynens/regexpu-core).
+
+## API
+
+### Base
+
+```ts
+declare abstract class Base {
+  isEmpty(): boolean;
+  toString(): string;
+  toRegExp(flags?: string): RegExp;
+}
+```
+
+### Charset
+
+```ts
+declare type CharsetInput =
+  | Charset
+  | string // char
+  | number // codepoint
+  | [string, string] // char: start to end (inclusive)
+  | [number, number]; // codepoint: start to end (inclusive)
+declare const charset: (...inputs: CharsetInput[]) => Charset;
+declare class Charset extends Base {
+  constructor(...inputs: CharsetInput[]);
+  union(...inputs: CharsetInput[]): Charset;
+  subtract(...inputs: CharsetInput[]): Charset;
+  intersect(...inputs: CharsetInput[]): Charset;
+}
+```
 
 ## Development
 
