@@ -134,6 +134,16 @@ function char_code(char: string) {
 }
 
 function normalize(raw_input: CharsetRawInput) {
+  if (
+    typeof raw_input === 'number' &&
+    (raw_input < 0 || raw_input > 0x10ffff)
+  ) {
+    throw new Error(
+      `Invalid unicode code point detected: ${
+        raw_input < 0 ? raw_input : `0x${raw_input.toString(16)}`
+      }`,
+    );
+  }
   const [normalized] = [raw_input]
     .map(x => (typeof x !== 'object' ? [x, x] : x))
     .map(x => x.map(u => (typeof u === 'string' ? char_code(u) : u)));
