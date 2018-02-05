@@ -24,6 +24,11 @@ test('create: reject string (length !== 1)', () => {
   expect(() => charset('123')).toThrowErrorMatchingSnapshot();
 });
 
+test('create: reject invalid unicode code point', () => {
+  expect(() => charset(0x110000)).toThrowErrorMatchingSnapshot();
+  expect(() => charset(-1)).toThrowErrorMatchingSnapshot();
+});
+
 test('create: collapse continous chars', () => {
   expect(charset(1, 2, 3, 4).toString()).toEqual('[\\u0001-\\u0004]');
 });
@@ -129,8 +134,3 @@ test('toString: normal syntax for <= 0xffff', () => {
 test('toString: u-flag syntax for > 0xffff', () => {
   expect(charset(0x10000).toString()).toEqual(`[\\u{10000}]`);
 });
-
-test('constructor: throws on undefined unicode code point', () => {
-  expect(() => charset(0x110000)).toThrow();
-  expect(() => charset(-1)).toThrow();
-})
