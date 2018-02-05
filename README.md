@@ -34,7 +34,7 @@ const aResult = 'a'.test(regex); //=> true
 const dResult = 'd'.test(regex); //=> false
 ```
 
-NOTE: You need to pass [`u` flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode) for codepoint that is greater than `0xffff`.
+NOTE: You need to pass [`u` flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode) for codepoint that is greater than `0xffff` (which caused `Range out of order in character class`).
 
 ## Development
 
