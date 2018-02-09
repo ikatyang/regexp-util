@@ -6,7 +6,7 @@ export type OrInput = string | Or | CharsetInput;
 
 export class Or extends Base {
   public charset: Charset;
-  public strings: Set<string>;
+  public strings: string[];
 
   constructor(...inputs: OrInput[]) {
     super();
@@ -28,7 +28,7 @@ export class Or extends Base {
       }
     }
 
-    this.strings = new Set(strings);
+    this.strings = Object.keys(dictionaryify(strings));
     this.charset = new Charset(...charset_inputs);
   }
 
@@ -37,14 +37,14 @@ export class Or extends Base {
   }
 
   public subtract(...inputs: OrInput[]) {
-    const strings = new Set(this.strings);
+    const string_dictionay = dictionaryify(this.strings);
     const charset = new Charset(...this.charset.data);
 
     const charset_inputs: CharsetInput[] = [];
     for (const input of inputs) {
       if (input instanceof Or) {
         for (const str of input.strings) {
-          strings.delete(str);
+          delete string_dictionay[str];
         }
         charset_inputs.push(input.charset);
       } else if (
@@ -53,15 +53,18 @@ export class Or extends Base {
       ) {
         charset_inputs.push(input);
       } else {
-        strings.delete(input);
+        delete string_dictionay[input];
       }
     }
 
-    return new Or(charset.subtract(...charset_inputs), ...strings);
+    return new Or(
+      charset.subtract(...charset_inputs),
+      ...Object.keys(string_dictionay),
+    );
   }
 
   protected _is_empty() {
-    return this.charset.isEmpty() && this.strings.size === 0;
+    return this.charset.isEmpty() && this.strings.length === 0;
   }
 
   protected _to_string() {
@@ -71,7 +74,7 @@ export class Or extends Base {
       parts.push(this.charset.toString());
     }
 
-    if (this.strings.size !== 0) {
+    if (this.strings.length !== 0) {
       parts.push(...this.strings);
     }
 
@@ -89,4 +92,12 @@ function is_special_char(char: string) {
     default:
       return false;
   }
+}
+
+function dictionaryify(array: string[]) {
+  const dictionary: Record<string, true> = {};
+  for (const value of array) {
+    dictionary[value] = true;
+  }
+  return dictionary;
 }
