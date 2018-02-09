@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/ikatyang/regexp-util/compare/v1.1.0...v1.2.0) (2018-02-09)
+
+
+### Features
+
+* **charset:** support surrogate pair ([#8](https://github.com/ikatyang/regexp-util/issues/8)) ([024764a](https://github.com/ikatyang/regexp-util/commit/024764a))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/ikatyang/regexp-util/compare/v1.0.0...v1.1.0) (2018-02-05)
 
