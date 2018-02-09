@@ -224,8 +224,13 @@ function split_ranges(data: CharsetDataUnit[]) {
 }
 
 function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
+  interface SurrogateData {
+    h: number;
+    l: CharsetDataUnit[];
+  }
+
   const entire: number[] = [];
-  const partial: Array<{ h: number; l: CharsetDataUnit[] }> = [];
+  const partial: SurrogateData[] = [];
 
   for (const [start, end] of ranges) {
     const start_pair = surrogate_pair(start);
@@ -263,8 +268,10 @@ function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
   }
 
   function add_partial_range(h: number, start: number, end: number) {
-    const last_partial = partial[partial.length - 1];
-    if (last_partial && last_partial.h === h) {
+    const last_partial = partial[partial.length - 1] as
+      | undefined
+      | SurrogateData;
+    if (last_partial !== undefined && last_partial.h === h) {
       last_partial.l.push([start, end]);
     } else {
       partial.push({ h, l: [[start, end]] });
