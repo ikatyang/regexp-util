@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toRegExp: accept flags 1`] = `/123/u`;
+exports[`toRegExp: accept flags 1`] = `/123/i`;
 
 exports[`toRegExp: default 1`] = `/123/`;
 

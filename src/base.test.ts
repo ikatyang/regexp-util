@@ -17,7 +17,7 @@ test('toRegExp: default', () => {
 });
 
 test('toRegExp: accept flags', () => {
-  expect(new Test('123').toRegExp('u')).toMatchSnapshot();
+  expect(new Test('123').toRegExp('i')).toMatchSnapshot();
 });
 
 test('toString: throw error if empty', () => {
