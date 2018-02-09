@@ -31,8 +31,6 @@ const aResult = 'a'.test(regex); //=> true
 const dResult = 'd'.test(regex); //=> false
 ```
 
-NOTE: You need to pass [`u` flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode) for codepoint that is greater than `0xffff`, or you'll have to [downgrade the pattern](https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae) (e.g. `\u{10000}` -> `\uD800\uDC00`) using [`regexpu-core`](https://github.com/mathiasbynens/regexpu-core).
-
 ## API
 
 ### Base

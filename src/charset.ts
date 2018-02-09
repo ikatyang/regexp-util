@@ -10,6 +10,12 @@ export type CharsetRawInput =
 
 export type CharsetDataUnit = [number, number];
 
+const enum SurrogateLimit {
+  Min = 0x10000,
+  MinL = 0xdc00,
+  MaxL = 0xdfff,
+}
+
 export class Charset extends Base {
   public data: CharsetDataUnit[];
 
@@ -89,11 +95,7 @@ export class Charset extends Base {
   }
 
   protected _to_string() {
-    const ranges = this.data.map(
-      ([start, end]) =>
-        start === end ? unicode(start) : `${unicode(start)}-${unicode(end)}`,
-    );
-    return `[${ranges.join('')}]`;
+    return ranges_to_string(this.data);
   }
 
   private _unique() {
@@ -117,13 +119,6 @@ export class Charset extends Base {
 }
 
 export const charset = (...inputs: CharsetInput[]) => new Charset(...inputs);
-
-function unicode(char: number) {
-  const hex = char.toString(16);
-  return char > 0xffff
-    ? `\\u{${hex}}`
-    : `\\u${'0'.repeat(4 - hex.length)}${hex}`;
-}
 
 function char_code(char: string) {
   if (char.length !== 1) {
@@ -152,4 +147,140 @@ function normalize(raw_input: CharsetRawInput) {
 
 function compare(a: CharsetDataUnit, b: CharsetDataUnit) {
   return a[0] - b[0];
+}
+
+/* -------------------------------------------------------------------------- */
+
+interface Surrogate {
+  entire: Charset;
+  partial: Array<{ h: number; l: Charset }>;
+}
+
+function ranges_to_string(ranges: CharsetDataUnit[]) {
+  const { normal, surrogate } = split_ranges(ranges);
+
+  const patterns: string[] = [];
+
+  if (normal.length !== 0) {
+    patterns.push(normal_to_pattern(normal));
+  }
+
+  patterns.push(...surrogate_to_patterns(surrogate));
+
+  return patterns.join('|');
+}
+
+function normal_to_pattern(normal: CharsetDataUnit[]) {
+  const ranges = normal.map(
+    ([start, end]) =>
+      start === end ? unicode(start) : `${unicode(start)}-${unicode(end)}`,
+  );
+  return `[${ranges.join('')}]`;
+}
+
+function surrogate_to_patterns(surrogate: Surrogate) {
+  const patterns: string[] = [];
+
+  if (surrogate.entire.data.length !== 0) {
+    const h = surrogate.entire.toString();
+    const l = `[${[SurrogateLimit.MinL, SurrogateLimit.MaxL]
+      .map(unicode)
+      .join('-')}]`;
+    patterns.push(`${h}${l}`);
+  }
+
+  for (const { h: raw_h, l: l_charset } of surrogate.partial) {
+    const h = unicode(raw_h);
+    const l = l_charset.toString();
+    patterns.push(`${h}${l}`);
+  }
+
+  return patterns;
+}
+
+function split_ranges(data: CharsetDataUnit[]) {
+  const normal: CharsetDataUnit[] = [];
+  const surrogate_ranges: CharsetDataUnit[] = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const data_unit = data[i];
+    const [start, end] = data_unit;
+
+    if (start >= SurrogateLimit.Min) {
+      surrogate_ranges.push(...data.slice(i));
+      break;
+    }
+
+    if (end >= SurrogateLimit.Min) {
+      normal.push([start, SurrogateLimit.Min - 1]);
+      surrogate_ranges.push([0x10000, end], ...data.slice(i + 1));
+      break;
+    }
+
+    normal.push(data_unit);
+  }
+
+  return { normal, surrogate: split_surrogate_ranges(surrogate_ranges) };
+}
+
+function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
+  const entire: number[] = [];
+  const partial: Array<{ h: number; l: CharsetDataUnit[] }> = [];
+
+  for (const [start, end] of ranges) {
+    const start_pair = surrogate_pair(start);
+    const end_pair = surrogate_pair(end);
+
+    if (start_pair.h === end_pair.h) {
+      add_partial_range(start_pair.h, start_pair.l, end_pair.l);
+      continue;
+    }
+
+    if (start_pair.l === SurrogateLimit.MinL) {
+      add_entire_range(start_pair.h);
+    } else {
+      add_partial_range(start_pair.h, start_pair.l, SurrogateLimit.MaxL);
+    }
+
+    for (let h = start_pair.h + 1; h < end_pair.h; h++) {
+      add_entire_range(h);
+    }
+
+    if (end_pair.l === SurrogateLimit.MaxL) {
+      add_entire_range(end_pair.h);
+    } else {
+      add_partial_range(end_pair.h, SurrogateLimit.MinL, end_pair.l);
+    }
+  }
+
+  return {
+    entire: new Charset(...entire),
+    partial: partial.map(({ h, l }) => ({ h, l: new Charset(...l) })),
+  };
+
+  function add_entire_range(h: number) {
+    entire.push(h);
+  }
+
+  function add_partial_range(h: number, start: number, end: number) {
+    const last_partial = partial[partial.length - 1];
+    if (last_partial && last_partial.h === h) {
+      last_partial.l.push([start, end]);
+    } else {
+      partial.push({ h, l: [[start, end]] });
+    }
+  }
+}
+
+// https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+function surrogate_pair(codepoint: number) {
+  return {
+    h: Math.floor((codepoint - 0x10000) / 0x400) + 0xd800,
+    l: (codepoint - 0x10000) % 0x400 + 0xdc00,
+  };
+}
+
+function unicode(char: number) {
+  const hex = char.toString(16);
+  return `\\u${'0'.repeat(4 - hex.length)}${hex}`;
 }
