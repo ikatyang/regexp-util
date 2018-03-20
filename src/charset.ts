@@ -38,12 +38,14 @@ export class Charset extends Base {
   }
 
   public subtract(...inputs: CharsetInput[]) {
+    const current_data = this.data.slice();
     const new_data: CharsetDataUnit[] = [];
 
     let subtract_index = 0;
     const { data: subtract_data } = new Charset(...inputs);
 
-    for (const data_unit of this.data) {
+    while (current_data.length !== 0) {
+      const data_unit = current_data.shift()!;
       const [start, end] = data_unit;
 
       let is_done: boolean;
@@ -71,11 +73,12 @@ export class Charset extends Base {
         } else if (subtract_start <= start && subtract_end < end) {
           // front overlap
           subtract_index++;
-          new_data.push([subtract_end + 1, end]);
+          current_data.unshift([subtract_end + 1, end]);
         } else if (start < subtract_start && subtract_end < end) {
           // central overlap
           subtract_index++;
-          new_data.push([start, subtract_start - 1], [subtract_end + 1, end]);
+          new_data.push([start, subtract_start - 1]);
+          current_data.unshift([subtract_end + 1, end]);
         } else if (start < subtract_start && end <= subtract_end) {
           // back overlap
           new_data.push([start, subtract_start - 1]);

@@ -91,6 +91,14 @@ test('subtract: central overlap', () => {
   ).toEqual(`[\\u0001-\\u0002\\u0006-\\u0007]`);
 });
 
+test('subtract: multi central overlap', () => {
+  expect(
+    charset([1, 7])
+      .subtract([2, 3], [5, 6])
+      .toString(),
+  ).toEqual(`[\\u0001\\u0004\\u0007]`);
+});
+
 test('subtract: back overlap', () => {
   expect(
     charset([1, 5])
