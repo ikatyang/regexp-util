@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/ikatyang/regexp-util/compare/v1.2.0...v1.2.1) (2018-03-20)
+
+
+### Bug Fixes
+
+* **charset:** subtraction with multi central overlap ([#25](https://github.com/ikatyang/regexp-util/issues/25)) ([f6595ef](https://github.com/ikatyang/regexp-util/commit/f6595ef))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/ikatyang/regexp-util/compare/v1.1.0...v1.2.0) (2018-02-09)
 
