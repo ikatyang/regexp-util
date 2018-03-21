@@ -51,6 +51,14 @@ test('union', () => {
   ).toEqual('[\\u0001\\u0003]');
 });
 
+test('union: central overlap', () => {
+  expect(
+    charset([0x5b, 0x60])
+      .union([0x5c, 0x5d])
+      .toString(),
+  ).toEqual(`[\\u005b-\\u0060]`);
+});
+
 test('subtract: front + no overlap', () => {
   expect(
     charset([5, 7])

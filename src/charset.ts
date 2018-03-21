@@ -112,7 +112,10 @@ export class Charset extends Base {
         new_data.push(data_unit);
         last_data_unit = data_unit;
       } else {
-        new_data.splice(-1, 1, [last_data_unit[0], data_unit[1]]);
+        new_data.splice(-1, 1, [
+          Math.min(data_unit[0], last_data_unit[0]),
+          Math.max(data_unit[1], last_data_unit[1]),
+        ]);
         last_data_unit = new_data[new_data.length - 1];
       }
     }
