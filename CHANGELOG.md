@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.2"></a>
+## [1.2.2](https://github.com/ikatyang/regexp-util/compare/v1.2.1...v1.2.2) (2018-03-21)
+
+
+### Bug Fixes
+
+* **charset:** union with central overlap ([#26](https://github.com/ikatyang/regexp-util/issues/26)) ([d44823e](https://github.com/ikatyang/regexp-util/commit/d44823e))
+
+
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/ikatyang/regexp-util/compare/v1.2.0...v1.2.1) (2018-03-20)
 
