@@ -41,7 +41,7 @@
     "typescript": "2.9.2"
   },
   "resolutions": {
-    "codecov/**/har-validator": "5.1.0"
+    "**/har-validator": "5.1.0"
   },
   "engines": {
     "node": ">= 4"
