@@ -41,7 +41,8 @@
     "typescript": "2.9.2"
   },
   "resolutions": {
-    "**/har-validator": "5.1.0"
+    "**/har-validator": "5.1.0",
+    "**/tough-cookie": "2.4.3"
   },
   "engines": {
     "node": ">= 4"
