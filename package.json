@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@types/jest": "21.1.10",
-    "codecov": "3.4.0",
+    "codecov": "3.5.0",
     "jest": "21.2.1",
     "prettier": "1.11.1",
     "prettier-config-ikatyang": "1.1.1",
