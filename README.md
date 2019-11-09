@@ -52,7 +52,9 @@ declare type CharsetInput =
   | number // codepoint
   | [string, string] // char: start to end (inclusive)
   | [number, number]; // codepoint: start to end (inclusive)
+  
 declare const charset: (...inputs: CharsetInput[]) => Charset;
+
 declare class Charset extends Base {
   constructor(...inputs: CharsetInput[]);
   union(...inputs: CharsetInput[]): Charset;
