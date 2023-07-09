@@ -38,95 +38,95 @@ export class Charset extends Base {
   }
 
   public subtract(...inputs: CharsetInput[]) {
-    const current_data = this.data.slice()
-    const new_data: CharsetDataUnit[] = []
+    const currentData = this.data.slice()
+    const newData: CharsetDataUnit[] = []
 
-    let subtract_index = 0
-    const { data: subtract_data } = new Charset(...inputs)
+    let subtractIndex = 0
+    const { data: subtractData } = new Charset(...inputs)
 
-    while (current_data.length !== 0) {
-      const data_unit = current_data.shift()!
-      const [start, end] = data_unit
+    while (currentData.length !== 0) {
+      const dataUnit = currentData.shift()!
+      const [start, end] = dataUnit
 
-      let is_done: boolean
+      let isDone: boolean
       do {
-        is_done = true
+        isDone = true
 
-        const subtract_data_unit = subtract_data[subtract_index] as
+        const subtractDataUnit = subtractData[subtractIndex] as
           | undefined
           | CharsetDataUnit
 
-        if (subtract_data_unit === undefined) {
-          new_data.push(data_unit)
+        if (subtractDataUnit === undefined) {
+          newData.push(dataUnit)
           break
         }
 
-        const [subtract_start, subtract_end] = subtract_data_unit
+        const [subtractStart, subtractEnd] = subtractDataUnit
 
-        if (subtract_end < start) {
+        if (subtractEnd < start) {
           // front + no overlap
-          is_done = false
-          subtract_index++
-        } else if (end < subtract_start) {
+          isDone = false
+          subtractIndex++
+        } else if (end < subtractStart) {
           // back + no overlap
-          new_data.push(data_unit)
-        } else if (subtract_start <= start && subtract_end < end) {
+          newData.push(dataUnit)
+        } else if (subtractStart <= start && subtractEnd < end) {
           // front overlap
-          subtract_index++
-          current_data.unshift([subtract_end + 1, end])
-        } else if (start < subtract_start && subtract_end < end) {
+          subtractIndex++
+          currentData.unshift([subtractEnd + 1, end])
+        } else if (start < subtractStart && subtractEnd < end) {
           // central overlap
-          subtract_index++
-          new_data.push([start, subtract_start - 1])
-          current_data.unshift([subtract_end + 1, end])
-        } else if (start < subtract_start && end <= subtract_end) {
+          subtractIndex++
+          newData.push([start, subtractStart - 1])
+          currentData.unshift([subtractEnd + 1, end])
+        } else if (start < subtractStart && end <= subtractEnd) {
           // back overlap
-          new_data.push([start, subtract_start - 1])
+          newData.push([start, subtractStart - 1])
         } // else: entire overlap
-      } while (!is_done)
+      } while (!isDone)
     }
 
-    return new Charset(...new_data)
+    return new Charset(...newData)
   }
 
   public intersect(...inputs: CharsetInput[]) {
     return this.subtract(this.subtract(...inputs))
   }
 
-  protected _is_empty() {
+  protected _isEmpty() {
     return this.data.length === 0
   }
 
-  protected _to_string() {
-    return ranges_to_string(this.data)
+  protected _toString() {
+    return rangesToString(this.data)
   }
 
   private _unique() {
     this.data.sort(compare)
 
-    const new_data: CharsetDataUnit[] = []
+    const newData: CharsetDataUnit[] = []
 
-    let last_data_unit: CharsetDataUnit | null = null
-    for (const data_unit of this.data) {
-      if (last_data_unit === null || last_data_unit[1] + 1 < data_unit[0]) {
-        new_data.push(data_unit)
-        last_data_unit = data_unit
+    let lastDataUnit: CharsetDataUnit | null = null
+    for (const dataUnit of this.data) {
+      if (lastDataUnit === null || lastDataUnit[1] + 1 < dataUnit[0]) {
+        newData.push(dataUnit)
+        lastDataUnit = dataUnit
       } else {
-        new_data.splice(-1, 1, [
-          Math.min(data_unit[0], last_data_unit[0]),
-          Math.max(data_unit[1], last_data_unit[1]),
+        newData.splice(-1, 1, [
+          Math.min(dataUnit[0], lastDataUnit[0]),
+          Math.max(dataUnit[1], lastDataUnit[1]),
         ])
-        last_data_unit = new_data[new_data.length - 1]
+        lastDataUnit = newData[newData.length - 1]
       }
     }
 
-    this.data = new_data
+    this.data = newData
   }
 }
 
 export const charset = (...inputs: CharsetInput[]) => new Charset(...inputs)
 
-function char_code(char: string) {
+function charCode(char: string) {
   if (char.length !== 1) {
     const display = `${char.length} (${JSON.stringify(char)})`
     throw new Error(`Expected length = 1, but received ${display}.`)
@@ -134,20 +134,17 @@ function char_code(char: string) {
   return char.charCodeAt(0)
 }
 
-function normalize(raw_input: CharsetRawInput) {
-  if (
-    typeof raw_input === 'number' &&
-    (raw_input < 0 || raw_input > 0x10ffff)
-  ) {
+function normalize(rawInput: CharsetRawInput) {
+  if (typeof rawInput === 'number' && (rawInput < 0 || rawInput > 0x10ffff)) {
     throw new Error(
       `Invalid unicode code point detected: ${
-        raw_input < 0 ? raw_input : `0x${raw_input.toString(16)}`
+        rawInput < 0 ? rawInput : `0x${rawInput.toString(16)}`
       }`,
     )
   }
-  const [normalized] = [raw_input]
-    .map(x => (typeof x !== 'object' ? [x, x] : x))
-    .map(x => x.map(u => (typeof u === 'string' ? char_code(u) : u)))
+  const [normalized] = [rawInput]
+    .map(_ => (typeof _ !== 'object' ? [_, _] : _))
+    .map(_ => _.map(u => (typeof u === 'string' ? charCode(u) : u)))
   return normalized as CharsetDataUnit
 }
 
@@ -162,28 +159,28 @@ interface Surrogate {
   partial: Array<{ h: number; l: Charset }>
 }
 
-function ranges_to_string(ranges: CharsetDataUnit[]) {
-  const { normal, surrogate } = split_ranges(ranges)
+function rangesToString(ranges: CharsetDataUnit[]) {
+  const { normal, surrogate } = splitRanges(ranges)
 
   const patterns: string[] = []
 
   if (normal.length !== 0) {
-    patterns.push(normal_to_pattern(normal))
+    patterns.push(normalToPattern(normal))
   }
 
-  patterns.push(...surrogate_to_patterns(surrogate))
+  patterns.push(...surrogateToPatterns(surrogate))
 
   return patterns.join('|')
 }
 
-function normal_to_pattern(normal: CharsetDataUnit[]) {
+function normalToPattern(normal: CharsetDataUnit[]) {
   const ranges = normal.map(([start, end]) =>
     start === end ? unicode(start) : `${unicode(start)}-${unicode(end)}`,
   )
   return `[${ranges.join('')}]`
 }
 
-function surrogate_to_patterns(surrogate: Surrogate) {
+function surrogateToPatterns(surrogate: Surrogate) {
   const patterns: string[] = []
 
   if (surrogate.entire.data.length !== 0) {
@@ -194,41 +191,41 @@ function surrogate_to_patterns(surrogate: Surrogate) {
     patterns.push(`${h}${l}`)
   }
 
-  for (const { h: raw_h, l: l_charset } of surrogate.partial) {
-    const h = unicode(raw_h)
-    const l = l_charset.toString()
+  for (const { h: rawH, l: lCharset } of surrogate.partial) {
+    const h = unicode(rawH)
+    const l = lCharset.toString()
     patterns.push(`${h}${l}`)
   }
 
   return patterns
 }
 
-function split_ranges(data: CharsetDataUnit[]) {
+function splitRanges(data: CharsetDataUnit[]) {
   const normal: CharsetDataUnit[] = []
-  const surrogate_ranges: CharsetDataUnit[] = []
+  const surrogateRanges: CharsetDataUnit[] = []
 
   for (let i = 0; i < data.length; i++) {
-    const data_unit = data[i]
-    const [start, end] = data_unit
+    const dataUnit = data[i]
+    const [start, end] = dataUnit
 
     if (start >= SurrogateLimit.Min) {
-      surrogate_ranges.push(...data.slice(i))
+      surrogateRanges.push(...data.slice(i))
       break
     }
 
     if (end >= SurrogateLimit.Min) {
       normal.push([start, SurrogateLimit.Min - 1])
-      surrogate_ranges.push([0x10000, end], ...data.slice(i + 1))
+      surrogateRanges.push([0x10000, end], ...data.slice(i + 1))
       break
     }
 
-    normal.push(data_unit)
+    normal.push(dataUnit)
   }
 
-  return { normal, surrogate: split_surrogate_ranges(surrogate_ranges) }
+  return { normal, surrogate: splitSurrogateRanges(surrogateRanges) }
 }
 
-function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
+function splitSurrogateRanges(ranges: CharsetDataUnit[]) {
   interface SurrogateData {
     h: number
     l: CharsetDataUnit[]
@@ -238,28 +235,28 @@ function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
   const partial: SurrogateData[] = []
 
   for (const [start, end] of ranges) {
-    const start_pair = surrogate_pair(start)
-    const end_pair = surrogate_pair(end)
+    const startPair = surrogatePair(start)
+    const endPair = surrogatePair(end)
 
-    if (start_pair.h === end_pair.h) {
-      add_partial_range(start_pair.h, start_pair.l, end_pair.l)
+    if (startPair.h === endPair.h) {
+      addPartialRange(startPair.h, startPair.l, endPair.l)
       continue
     }
 
-    if (start_pair.l === SurrogateLimit.MinL) {
-      add_entire_range(start_pair.h)
+    if (startPair.l === SurrogateLimit.MinL) {
+      addEntireRange(startPair.h)
     } else {
-      add_partial_range(start_pair.h, start_pair.l, SurrogateLimit.MaxL)
+      addPartialRange(startPair.h, startPair.l, SurrogateLimit.MaxL)
     }
 
-    for (let h = start_pair.h + 1; h < end_pair.h; h++) {
-      add_entire_range(h)
+    for (let h = startPair.h + 1; h < endPair.h; h++) {
+      addEntireRange(h)
     }
 
-    if (end_pair.l === SurrogateLimit.MaxL) {
-      add_entire_range(end_pair.h)
+    if (endPair.l === SurrogateLimit.MaxL) {
+      addEntireRange(endPair.h)
     } else {
-      add_partial_range(end_pair.h, SurrogateLimit.MinL, end_pair.l)
+      addPartialRange(endPair.h, SurrogateLimit.MinL, endPair.l)
     }
   }
 
@@ -268,16 +265,14 @@ function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
     partial: partial.map(({ h, l }) => ({ h, l: new Charset(...l) })),
   }
 
-  function add_entire_range(h: number) {
+  function addEntireRange(h: number) {
     entire.push(h)
   }
 
-  function add_partial_range(h: number, start: number, end: number) {
-    const last_partial = partial[partial.length - 1] as
-      | undefined
-      | SurrogateData
-    if (last_partial !== undefined && last_partial.h === h) {
-      last_partial.l.push([start, end])
+  function addPartialRange(h: number, start: number, end: number) {
+    const lastPartial = partial[partial.length - 1] as undefined | SurrogateData
+    if (lastPartial !== undefined && lastPartial.h === h) {
+      lastPartial.l.push([start, end])
     } else {
       partial.push({ h, l: [[start, end]] })
     }
@@ -285,7 +280,7 @@ function split_surrogate_ranges(ranges: CharsetDataUnit[]) {
 }
 
 // https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
-function surrogate_pair(codepoint: number) {
+function surrogatePair(codepoint: number) {
   return {
     h: Math.floor((codepoint - 0x10000) / 0x400) + 0xd800,
     l: ((codepoint - 0x10000) % 0x400) + 0xdc00,

@@ -1,17 +1,17 @@
 export abstract class Base {
   public isEmpty() {
-    return this._is_empty()
+    return this._isEmpty()
   }
   public toString() {
     if (this.isEmpty()) {
       throw new Error(`Output is empty.`)
     }
-    return this._to_string()
+    return this._toString()
   }
   public toRegExp(flags?: string) {
     return new RegExp(this.toString(), flags)
   }
 
-  protected abstract _is_empty(): boolean
-  protected abstract _to_string(): string
+  protected abstract _isEmpty(): boolean
+  protected abstract _toString(): string
 }
