@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`create: reject invalid unicode code point 1`] = `"Invalid unicode code point detected: 0x110000"`;
 

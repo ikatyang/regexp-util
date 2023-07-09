@@ -1,8 +1,7 @@
 # regexp-util
 
 [![npm](https://img.shields.io/npm/v/regexp-util.svg)](https://www.npmjs.com/package/regexp-util)
-[![build](https://img.shields.io/travis/ikatyang/regexp-util/master.svg)](https://travis-ci.org/ikatyang/regexp-util/builds)
-[![coverage](https://img.shields.io/codecov/c/github/ikatyang/regexp-util/master.svg)](https://codecov.io/gh/ikatyang/regexp-util)
+[![build](https://img.shields.io/github/actions/workflow/status/ikatyang/regexp-util/test.yml)](https://github.com/ikatyang/regexp-util/actions?query=branch%3Amaster)
 
 utilities for generating regular expression
 
@@ -11,24 +10,21 @@ utilities for generating regular expression
 ## Install
 
 ```sh
-# using npm
-npm install --save regexp-util
-
-# using yarn
-yarn add regexp-util
+npm install regexp-util
 ```
 
 ## Usage
 
 ```ts
-const util = require('regexp-util');
+import { charset } from 'regexp-util'
 
-const regex = util.charset(['a', 'g']) // a ~ g
+const regex = util
+  .charset(['a', 'g']) // a ~ g
   .subtract(['c', 'e'])
-  .toRegExp();
+  .toRegExp()
 
-const aResult = 'a'.test(regex); //=> true
-const dResult = 'd'.test(regex); //=> false
+const aResult = 'a'.test(regex) //=> true
+const dResult = 'd'.test(regex) //=> false
 ```
 
 ## API
@@ -37,9 +33,9 @@ const dResult = 'd'.test(regex); //=> false
 
 ```ts
 declare abstract class Base {
-  isEmpty(): boolean;
-  toString(): string;
-  toRegExp(flags?: string): RegExp;
+  isEmpty(): boolean
+  toString(): string
+  toRegExp(flags?: string): RegExp
 }
 ```
 
@@ -51,15 +47,15 @@ declare type CharsetInput =
   | string // char
   | number // codepoint
   | [string, string] // char: start to end (inclusive)
-  | [number, number]; // codepoint: start to end (inclusive)
-  
-declare const charset: (...inputs: CharsetInput[]) => Charset;
+  | [number, number] // codepoint: start to end (inclusive)
+
+declare function charset(...inputs: CharsetInput[]): Charset
 
 declare class Charset extends Base {
-  constructor(...inputs: CharsetInput[]);
-  union(...inputs: CharsetInput[]): Charset;
-  subtract(...inputs: CharsetInput[]): Charset;
-  intersect(...inputs: CharsetInput[]): Charset;
+  constructor(...inputs: CharsetInput[])
+  union(...inputs: CharsetInput[]): Charset
+  subtract(...inputs: CharsetInput[]): Charset
+  intersect(...inputs: CharsetInput[]): Charset
 }
 ```
 
@@ -67,13 +63,13 @@ declare class Charset extends Base {
 
 ```sh
 # lint
-yarn run lint
+pnpm run lint
 
 # build
-yarn run build
+pnpm run build
 
 # test
-yarn run test
+pnpm run test
 ```
 
 ## License

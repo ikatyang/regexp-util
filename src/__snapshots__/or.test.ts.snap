@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`create: accept charset inputs 1`] = `"(?:[\\\\u0001-\\\\u0003\\\\u0061])"`;
 

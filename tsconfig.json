@@ -1,11 +1,13 @@
 {
+  "include": ["src/**/*", "tests/**/*"],
   "compilerOptions": {
     "strict": true,
-    "target": "es5",
-    "lib": ["es6"],
-    "module": "commonjs",
+    "target": "ES2021",
+    "lib": ["ES2021"],
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "declaration": true,
-    "importHelpers": true
-  },
-  "include": ["src/**/*.ts", "tests/**/*.ts"]
+    "importHelpers": true,
+    "skipLibCheck": true
+  }
 }
