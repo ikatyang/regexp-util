@@ -37,7 +37,8 @@
     "node": ">=16"
   },
   "files": [
-    "/lib/**/*"
+    "/lib/**/*",
+    "/CHANGELOG.md"
   ],
   "packageManager": "pnpm@8.6.6"
 }
