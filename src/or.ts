@@ -12,24 +12,24 @@ export class Or extends Base {
     super()
 
     const strings: string[] = []
-    const charset_inputs: CharsetInput[] = []
+    const charsetInputs: CharsetInput[] = []
 
     for (const input of inputs) {
       if (input instanceof Or) {
         strings.push(...input.strings)
-        charset_inputs.push(input.charset)
+        charsetInputs.push(input.charset)
       } else if (
         typeof input !== 'string' ||
-        (input.length === 1 && !is_special_char(input))
+        (input.length === 1 && !isSpecialChar(input))
       ) {
-        charset_inputs.push(input)
+        charsetInputs.push(input)
       } else {
         strings.push(input)
       }
     }
 
     this.strings = Object.keys(dictionaryify(strings))
-    this.charset = new Charset(...charset_inputs)
+    this.charset = new Charset(...charsetInputs)
   }
 
   public union(...inputs: OrInput[]) {
@@ -37,37 +37,37 @@ export class Or extends Base {
   }
 
   public subtract(...inputs: OrInput[]) {
-    const string_dictionay = dictionaryify(this.strings)
+    const stringDictionary = dictionaryify(this.strings)
     const charset = new Charset(...this.charset.data)
 
-    const charset_inputs: CharsetInput[] = []
+    const charsetInputs: CharsetInput[] = []
     for (const input of inputs) {
       if (input instanceof Or) {
         for (const str of input.strings) {
-          delete string_dictionay[str]
+          delete stringDictionary[str]
         }
-        charset_inputs.push(input.charset)
+        charsetInputs.push(input.charset)
       } else if (
         typeof input !== 'string' ||
-        (input.length === 1 && !is_special_char(input))
+        (input.length === 1 && !isSpecialChar(input))
       ) {
-        charset_inputs.push(input)
+        charsetInputs.push(input)
       } else {
-        delete string_dictionay[input]
+        delete stringDictionary[input]
       }
     }
 
     return new Or(
-      charset.subtract(...charset_inputs),
-      ...Object.keys(string_dictionay),
+      charset.subtract(...charsetInputs),
+      ...Object.keys(stringDictionary),
     )
   }
 
-  protected _is_empty() {
+  protected _isEmpty() {
     return this.charset.isEmpty() && this.strings.length === 0
   }
 
-  protected _to_string() {
+  protected _toString() {
     const parts: string[] = []
 
     if (this.charset.data.length !== 0) {
@@ -84,7 +84,7 @@ export class Or extends Base {
 
 export const or = (...inputs: OrInput[]) => new Or(...inputs)
 
-function is_special_char(char: string) {
+function isSpecialChar(char: string) {
   switch (char) {
     case '^':
     case '$':

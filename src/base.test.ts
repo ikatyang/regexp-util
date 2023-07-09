@@ -5,10 +5,10 @@ class Test extends Base {
   constructor(public data: string) {
     super()
   }
-  protected _is_empty() {
+  protected _isEmpty() {
     return this.data.length === 0
   }
-  protected _to_string() {
+  protected _toString() {
     return this.data
   }
 }
