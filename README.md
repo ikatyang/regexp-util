@@ -34,7 +34,7 @@ const dResult = 'd'.test(regex) //=> false
 ```ts
 declare abstract class Base {
   isEmpty(): boolean
-  toString(): string
+  toString(flags?: string): string
   toRegExp(flags?: string): RegExp
 }
 ```
