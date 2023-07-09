@@ -1,6 +1,25 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+# [2.0.0](https://github.com/ikatyang/regexp-util/compare/v1.2.2...v2.0.0) (2023-07-09)
+
+### Build System
+
+- update infra ([#93](https://github.com/ikatyang/regexp-util/issues/93)) ([2326539](https://github.com/ikatyang/regexp-util/commit/2326539e617ce23e1e564ccf5b96221fd495203b))
+
+### Code Refactoring
+
+- replace snake_case with camelCase ([d337df6](https://github.com/ikatyang/regexp-util/commit/d337df634484d419c93b50e93c9f628cd7222a99))
+
+### Features
+
+- do not use surrogate pair if u-flag is specified ([978e5e5](https://github.com/ikatyang/regexp-util/commit/978e5e570a1502bb42c4de429ab73a2c9f6db591))
+
+### BREAKING CHANGES
+
+- `_is_empty`/`_to_string` has been renamed with `_isEmpty`/`_toString`
+- this package is now pure ESM
 
 <a name="1.2.2"></a>
 
