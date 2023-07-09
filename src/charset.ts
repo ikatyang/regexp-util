@@ -97,8 +97,8 @@ export class Charset extends Base {
     return this.data.length === 0
   }
 
-  protected _toString() {
-    return rangesToString(this.data)
+  protected _toString(flags?: string) {
+    return rangesToString(this.data, flags)
   }
 
   private _unique() {
@@ -159,13 +159,17 @@ interface Surrogate {
   partial: Array<{ h: number; l: Charset }>
 }
 
-function rangesToString(ranges: CharsetDataUnit[]) {
+function rangesToString(ranges: CharsetDataUnit[], flags: string = '') {
+  if (flags.includes('u')) {
+    return normalToPattern(ranges, true)
+  }
+
   const { normal, surrogate } = splitRanges(ranges)
 
   const patterns: string[] = []
 
   if (normal.length !== 0) {
-    patterns.push(normalToPattern(normal))
+    patterns.push(normalToPattern(normal, false))
   }
 
   patterns.push(...surrogateToPatterns(surrogate))
@@ -173,9 +177,11 @@ function rangesToString(ranges: CharsetDataUnit[]) {
   return patterns.join('|')
 }
 
-function normalToPattern(normal: CharsetDataUnit[]) {
+function normalToPattern(normal: CharsetDataUnit[], hasUnicodeFlag: boolean) {
   const ranges = normal.map(([start, end]) =>
-    start === end ? unicode(start) : `${unicode(start)}-${unicode(end)}`,
+    start === end
+      ? unicode(start, hasUnicodeFlag)
+      : `${unicode(start, hasUnicodeFlag)}-${unicode(end, hasUnicodeFlag)}`,
   )
   return `[${ranges.join('')}]`
 }
@@ -186,13 +192,13 @@ function surrogateToPatterns(surrogate: Surrogate) {
   if (surrogate.entire.data.length !== 0) {
     const h = surrogate.entire.toString()
     const l = `[${[SurrogateLimit.MinL, SurrogateLimit.MaxL]
-      .map(unicode)
+      .map(_ => unicode(_, false))
       .join('-')}]`
     patterns.push(`${h}${l}`)
   }
 
   for (const { h: rawH, l: lCharset } of surrogate.partial) {
-    const h = unicode(rawH)
+    const h = unicode(rawH, false)
     const l = lCharset.toString()
     patterns.push(`${h}${l}`)
   }
@@ -287,7 +293,9 @@ function surrogatePair(codepoint: number) {
   }
 }
 
-function unicode(char: number) {
+function unicode(char: number, hasUnicodeFlag: boolean) {
   const hex = char.toString(16)
-  return `\\u${'0'.repeat(4 - hex.length)}${hex}`
+  return hasUnicodeFlag
+    ? `\\u{${hex}}`
+    : `\\u${'0'.repeat(4 - hex.length)}${hex}`
 }

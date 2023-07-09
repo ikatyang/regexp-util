@@ -122,7 +122,7 @@ test('toString: normal syntax for <= 0xffff', () => {
   expect(charset(0xffff).toString()).toEqual(`[\\uffff]`)
 })
 
-test('toString: surrogate pair for > 0xffff', () => {
+test('toString: surrogate pair for > 0xffff without u-flag', () => {
   expect(charset(0x10000).toString()).toEqual(`\\ud800[\\udc00]`)
   expect(charset([0, 0x10000]).toString()).toEqual(
     `[\\u0000-\\uffff]|\\ud800[\\udc00]`,
@@ -136,6 +136,10 @@ test('toString: surrogate pair for > 0xffff', () => {
   expect(charset([0, 0x10ffff]).toString()).toEqual(
     `[\\u0000-\\uffff]|[\\ud800-\\udbff][\\udc00-\\udfff]`,
   )
+})
+
+test('toString: no surrogate pair for > 0xffff with u-flag', () => {
+  expect(charset([0, 0x10ffff]).toString('u')).toEqual(`[\\u{0}-\\u{10ffff}]`)
 })
 
 test('toRegExp: codepoint > 0xffff should not throw error without u-flag', () => {
