@@ -13,9 +13,9 @@ export const repeat = (input: string | Base, count: number, max?: number) =>
   max === undefined
     ? `${wrap(input)}{${count}}`
     : max === Infinity
-    ? count > 1
-      ? `${wrap(input)}{${count},}`
-      : count < 1
-      ? `${wrap(input)}*`
-      : `${wrap(input)}+`
-    : `${wrap(input)}{${count},${max}}`
+      ? count > 1
+        ? `${wrap(input)}{${count},}`
+        : count < 1
+          ? `${wrap(input)}*`
+          : `${wrap(input)}+`
+      : `${wrap(input)}{${count},${max}}`
