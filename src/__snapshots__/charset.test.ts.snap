@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`create: reject invalid unicode code point 1`] = `"Invalid unicode code point detected: 0x110000"`;
+exports[`create: reject invalid unicode code point 1`] = `[Error: Invalid unicode code point detected: 0x110000]`;
 
-exports[`create: reject invalid unicode code point 2`] = `"Invalid unicode code point detected: -1"`;
+exports[`create: reject invalid unicode code point 2`] = `[Error: Invalid unicode code point detected: -1]`;
 
-exports[`create: reject string (length !== 1) 1`] = `"Expected length = 1, but received 3 (\\"123\\")."`;
+exports[`create: reject string (length !== 1) 1`] = `[Error: Expected length = 1, but received 3 ("123").]`;
