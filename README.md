@@ -1,11 +1,11 @@
 # regexp-util
 
 [![npm](https://img.shields.io/npm/v/regexp-util.svg)](https://www.npmjs.com/package/regexp-util)
-[![build](https://img.shields.io/github/actions/workflow/status/ikatyang/regexp-util/test.yml)](https://github.com/ikatyang/regexp-util/actions?query=branch%3Amaster)
+[![build](https://img.shields.io/github/actions/workflow/status/ikatyang/regexp-util/test.yml)](https://github.com/ikatyang/regexp-util/actions?query=branch%3Amain)
 
 utilities for generating regular expression
 
-[Changelog](https://github.com/ikatyang/regexp-util/blob/master/CHANGELOG.md)
+[Changelog](https://github.com/ikatyang/regexp-util/blob/main/CHANGELOG.md)
 
 ## Install
 
