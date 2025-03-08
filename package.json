@@ -7,8 +7,8 @@
     "regex"
   ],
   "exports": "./lib/index.js",
-  "repository": "https://github.com/ikatyang/regexp-util",
-  "homepage": "https://github.com/ikatyang/regexp-util#readme",
+  "repository": "https://github.com/ikatyang-collab/regexp-util",
+  "homepage": "https://github.com/ikatyang-collab/regexp-util#readme",
   "author": {
     "name": "Ika",
     "email": "ikatyang@gmail.com",
